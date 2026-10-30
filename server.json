@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.karimghabbour/founderstoolkit-mcp",
+  "description": "Search, compare and get recommendations from 169 verified software tools for one-person companies on founderstoolkit.org, read the verified change log, and submit a tool for listing",
+  "websiteUrl": "https://founderstoolkit.org",
+  "repository": {
+    "url": "https://github.com/karimghabbour/founderstoolkit-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "founderstoolkit-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
