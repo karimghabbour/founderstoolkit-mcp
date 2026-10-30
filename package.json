@@ -1,0 +1,41 @@
+{
+  "name": "founderstoolkit-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for founderstoolkit.org: search, compare and get recommendations from 169 verified software tools for one-person companies, read the verified change log, and submit a tool for listing",
+  "main": "index.mjs",
+  "type": "module",
+  "bin": {
+    "founderstoolkit-mcp": "index.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "ai-tools",
+    "tools",
+    "solo-founder",
+    "saas",
+    "directory",
+    "ai-coding",
+    "startups"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karimghabbour/founderstoolkit-mcp.git"
+  },
+  "homepage": "https://founderstoolkit.org",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "files": [
+    "index.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "bugs": {
+    "email": "hello@founderstoolkit.org"
+  }
+}
