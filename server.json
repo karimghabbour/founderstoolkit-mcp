@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.karimghabbour/founderstoolkit-mcp",
-  "description": "Search, compare and get recommendations from 169 verified software tools for one-person companies on founderstoolkit.org, read the verified change log, and submit a tool for listing",
+  "description": "Verified software tools for one-person companies: search, compare, recommend, change log, submit",
   "websiteUrl": "https://founderstoolkit.org",
   "repository": {
     "url": "https://github.com/karimghabbour/founderstoolkit-mcp",
