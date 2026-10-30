@@ -38,5 +38,6 @@
   },
   "bugs": {
     "email": "hello@founderstoolkit.org"
-  }
+  },
+  "mcpName": "io.github.karimghabbour/founderstoolkit-mcp"
 }
