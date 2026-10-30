@@ -144,6 +144,14 @@ server.tool(
   }
 );
 
+// The vendor's plans as indented lines, with the date they were checked, when the API has them.
+function plansText(tool, indent = "") {
+  if (!tool.plans || tool.plans.length === 0) return "";
+  const lines = tool.plans.map((p) => `${indent}- ${p.name}: ${p.price}${p.note ? ` (${p.note})` : ""}`);
+  const checked = tool.pricingVerified ? `\n${indent}Prices checked ${tool.pricingVerified}${tool.pricingSource ? ` at ${tool.pricingSource}` : ""}` : "";
+  return `\n${indent}Plans:\n${lines.join("\n")}${checked}`;
+}
+
 // Tool 2: Get detailed info about a specific tool
 server.tool(
   "get_tool",
@@ -174,7 +182,7 @@ server.tool(
     const text = `# ${tool.name}
 
 **Category:** ${tool.categoryName}${tool.featured ? "\n**Featured:** yes" : ""}
-**Pricing:** ${tool.pricing}
+**Pricing:** ${tool.pricing}${plansText(tool)}${tool.bestFor ? `\n**Best for:** ${tool.bestFor}` : ""}
 **Website:** ${tool.website}
 
 ${tool.description}
@@ -225,12 +233,12 @@ server.tool(
     const text = `# ${a.name} vs ${b.name}
 
 ## ${a.name}
-- **Pricing:** ${a.pricing}
+- **Pricing:** ${a.pricing}${plansText(a, "  ")}${a.bestFor ? `\n- **Best for:** ${a.bestFor}` : ""}
 - **Pros:** ${a.pros.join("; ")}
 - **Cons:** ${a.cons.join("; ")}
 
 ## ${b.name}
-- **Pricing:** ${b.pricing}
+- **Pricing:** ${b.pricing}${plansText(b, "  ")}${b.bestFor ? `\n- **Best for:** ${b.bestFor}` : ""}
 - **Pros:** ${b.pros.join("; ")}
 - **Cons:** ${b.cons.join("; ")}
 
