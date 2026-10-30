@@ -1,6 +1,13 @@
-# Publishes the package to npm (trusted publishing, no token) and registers the version in the
-# official MCP Registry whenever a tag like v1.0.1 is pushed. The version in package.json and
-# server.json must match the tag.
+# Publishes the package to npm whenever a tag like v1.0.2 is pushed. The version in package.json
+# and server.json must match the tag.
+#
+# npm trusted publishing: this workflow is registered on npmjs.com as the package's trusted
+# publisher, so it needs no token. A trusted publisher may always stage a version
+# (`npm stage publish`); publishing directly (`npm publish`) works only when the package's trusted
+# publisher entry allows it. The step below tries the direct publish first and stages the version
+# when npm refuses. A staged version becomes public once a maintainer approves it on npmjs.com
+# (package page, Staged versions) or with `npm stage approve <stage-id>`, with two-factor
+# authentication; after that, run the "Register in the MCP Registry" workflow for the same version.
 name: Publish
 
 on:
@@ -33,14 +40,31 @@ jobs:
           SRV="$(node -p "require('./server.json').version")"
           test "$TAG" = "$PKG" && test "$TAG" = "$SRV" || { echo "tag $TAG, package $PKG, server.json $SRV"; exit 1; }
 
-      - name: Publish to npm
-        run: npm publish --access public
+      - name: Publish to npm, or stage the version when direct publishing is refused
+        id: publish
+        run: |
+          if npm publish --access public; then
+            echo "mode=direct" >> "$GITHUB_OUTPUT"
+            echo "Published directly."
+          else
+            echo "Direct publish refused; staging the version for approval on npmjs.com."
+            npm stage publish
+            echo "mode=staged" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Install the MCP Registry publisher
+        if: steps.publish.outputs.mode == 'direct'
         run: |
           curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/').tar.gz" | tar xz mcp-publisher
 
       - name: Publish to the MCP Registry
+        if: steps.publish.outputs.mode == 'direct'
         run: |
           ./mcp-publisher login github-oidc
           ./mcp-publisher publish
+
+      - name: Say what happened
+        run: |
+          if [ "${{ steps.publish.outputs.mode }}" = "staged" ]; then
+            echo "::notice::Version staged on npm. Approve it on https://www.npmjs.com/package/founderstoolkit-mcp (Staged versions) with 2FA, then run the 'Register in the MCP Registry' workflow."
+          fi

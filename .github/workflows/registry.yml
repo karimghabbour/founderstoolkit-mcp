@@ -1,0 +1,32 @@
+# Registers the version in server.json in the official MCP Registry
+# (https://registry.modelcontextprotocol.io). Run it by hand after a staged npm version has been
+# approved, since the registry checks that the npm package version exists and carries mcpName.
+# The publish workflow runs the same steps itself when it could publish to npm directly.
+name: Register in the MCP Registry
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check that the version is on npm
+        run: |
+          SRV="$(node -p "require('./server.json').version")"
+          npm view "founderstoolkit-mcp@$SRV" version || { echo "founderstoolkit-mcp@$SRV is not on npm yet"; exit 1; }
+
+      - name: Install the MCP Registry publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Publish to the MCP Registry
+        run: |
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish

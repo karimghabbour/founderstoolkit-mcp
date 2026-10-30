@@ -1,6 +1,6 @@
 {
   "name": "founderstoolkit-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP server for founderstoolkit.org: search, compare and get recommendations from 169 verified software tools for one-person companies, read the verified change log, and submit a tool for listing",
   "main": "index.mjs",
   "type": "module",
